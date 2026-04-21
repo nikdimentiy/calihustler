@@ -1827,14 +1827,11 @@
 
         /* --- watch auth state: show/hide FAB --- */
         function syncFab() {
-            /* detect sign-in by watching the sessionWidget visibility,
-               which the existing app code already toggles */
+            /* detect sign-in via inline style only — computed style is unreliable
+               on mobile where CSS hides #sessionWidget for layout reasons */
             var sw = document.getElementById('sessionWidget');
             if (!sw || !sfabWrap) return;
-            var visible = sw.style.display !== 'none' && sw.style.visibility !== 'hidden' && !sw.hidden;
-            /* also try computed style */
-            var cs = window.getComputedStyle(sw);
-            visible = cs.display !== 'none' && cs.visibility !== 'hidden' && cs.opacity !== '0';
+            var visible = sw.style.display === 'block';
             sfabWrap.style.display = visible ? 'flex' : 'none';
             /* sync email label */
             var emailEl = document.getElementById('swEmail');
