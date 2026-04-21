@@ -137,6 +137,255 @@
             .dw-cluster .dw-corner-tl, .dw-cluster .dw-corner-tr,
             .dw-cluster .dw-corner-bl, .dw-cluster .dw-corner-br { width: 10px; height: 10px; }
         }
+        /* ── MONTHLY PROGRESS RAIL — hidden on all mobile & tablet ── */
+        @media (max-width: 1024px) {
+            #monthRail { display: none !important; }
+        }
+        /* ── MISSION HUB FAB SPEED DIAL ── */
+        .mhub-container {
+            position: fixed;
+            right: 90px;
+            top: 160px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        .mhub-trigger {
+            width: 50px; height: 50px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(0,245,255,0.38);
+            background: rgba(4,9,20,0.93);
+            background-image: linear-gradient(135deg, rgba(0,245,255,0.05) 0%, transparent 60%);
+            background-size: 200% 200%;
+            background-position: 100% 100%;
+            backdrop-filter: blur(22px);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 22px rgba(0,245,255,0.22), 0 4px 26px rgba(0,0,0,0.78);
+            transition: border-color 0.3s ease, box-shadow 0.35s ease,
+                        transform 0.38s cubic-bezier(0.34,1.56,0.64,1),
+                        background-position 0.45s ease, background-color 0.3s ease;
+            position: relative;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+        /* ② Outer ring pulse */
+        .mhub-trigger::after {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            border: 1px solid rgba(0,245,255,0.2);
+            animation: mhub-ring-pulse 2.6s ease-in-out infinite;
+            pointer-events: none;
+        }
+        @keyframes mhub-ring-pulse {
+            0%, 100% { opacity: 0.55; transform: scale(1); }
+            55%       { opacity: 0;    transform: scale(1.45); }
+        }
+        /* ③ Hover — shimmer sweep + glow boost */
+        .mhub-trigger:hover {
+            border-color: rgba(0,245,255,0.78);
+            box-shadow: 0 0 38px rgba(0,245,255,0.52), 0 4px 26px rgba(0,0,0,0.78);
+            transform: scale(1.11);
+            background-position: 0% 0%;
+        }
+        /* ④ Active/open state — tricolor aurora + faster spin */
+        .mhub-trigger.active {
+            background-color: rgba(4,9,20,0.85);
+            border-color: rgba(255,80,80,0.55);
+            box-shadow:
+                0 0 20px rgba(255,215,0,0.18),
+                0 0 32px rgba(57,255,20,0.14),
+                0 0 42px rgba(0,245,255,0.18),
+                0 4px 26px rgba(0,0,0,0.78);
+            transform: rotate(180deg) scale(1.06);
+        }
+        .mhub-trigger.active::after {
+            border-color: rgba(255,80,80,0.22);
+        }
+        /* Three glowing dots — staggered breathing */
+        .mhub-dots {
+            display: flex;
+            flex-direction: column;
+            gap: 4.5px;
+            align-items: center;
+            transition: opacity 0.22s ease, transform 0.22s ease;
+        }
+        .mhub-trigger.active .mhub-dots { opacity: 0; transform: scale(0.5); pointer-events: none; position: absolute; }
+        .mhub-dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        /* ⑤ Dot stagger breathing */
+        .mhub-dot-1 {
+            background: #ffd700;
+            box-shadow: 0 0 7px rgba(255,215,0,0.85);
+            animation: mhub-dot-breathe 2.2s ease-in-out infinite 0s;
+        }
+        .mhub-dot-2 {
+            background: #39ff14;
+            box-shadow: 0 0 7px rgba(57,255,20,0.85);
+            animation: mhub-dot-breathe 2.2s ease-in-out infinite 0.74s;
+        }
+        .mhub-dot-3 {
+            background: #00f5ff;
+            box-shadow: 0 0 7px rgba(0,245,255,0.85);
+            animation: mhub-dot-breathe 2.2s ease-in-out infinite 1.48s;
+        }
+        @keyframes mhub-dot-breathe {
+            0%, 100% { transform: scale(1);    filter: brightness(1); }
+            50%       { transform: scale(1.55); filter: brightness(1.9) drop-shadow(0 0 4px currentColor); }
+        }
+        .mhub-icon-close {
+            display: none;
+            color: rgba(255,110,110,0.95);
+            font-size: 1.08rem;
+            animation: mhub-close-pop 0.32s cubic-bezier(0.34,1.56,0.64,1) both;
+        }
+        @keyframes mhub-close-pop {
+            from { transform: scale(0.3) rotate(-90deg); opacity: 0; }
+            to   { transform: scale(1)   rotate(0deg);   opacity: 1; }
+        }
+        .mhub-trigger.active .mhub-icon-close { display: inline; }
+        /* Items tray */
+        .mhub-items {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+            visibility: hidden;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.26s ease, visibility 0s linear 0.26s;
+            padding-top: 9px;
+        }
+        .mhub-container.open .mhub-items {
+            visibility: visible;
+            opacity: 1;
+            pointer-events: all;
+            transition: opacity 0.26s ease, visibility 0s linear 0s;
+        }
+        .mhub-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .mhub-btn {
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.11);
+            background: rgba(4,9,20,0.92);
+            backdrop-filter: blur(16px);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.92rem;
+            flex-shrink: 0;
+            transition: border-color 0.22s ease, box-shadow 0.22s ease, background 0.22s ease,
+                        transform 0.28s cubic-bezier(0.34,1.56,0.64,1), opacity 0.26s ease;
+            transform: scale(0.6) translateX(28px);
+            opacity: 0;
+            box-shadow: 0 2px 14px rgba(0,0,0,0.6);
+        }
+        .mhub-container.open .mhub-btn {
+            transform: scale(1) translateX(0);
+            opacity: 1;
+        }
+        .mhub-container.open .mhub-item:nth-child(1) .mhub-btn { transition-delay: 0.04s; }
+        .mhub-container.open .mhub-item:nth-child(2) .mhub-btn { transition-delay: 0.09s; }
+        .mhub-container.open .mhub-item:nth-child(3) .mhub-btn { transition-delay: 0.14s; }
+        .mhub-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.58rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            padding: 4px 11px;
+            border-radius: 4px;
+            background: rgba(4,9,20,0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.07);
+            opacity: 0;
+            transform: translateX(16px);
+            transition: opacity 0.22s ease, transform 0.22s ease;
+            user-select: none;
+            pointer-events: none;
+        }
+        .mhub-container.open .mhub-label {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .mhub-container.open .mhub-item:nth-child(1) .mhub-label { transition-delay: 0.06s; }
+        .mhub-container.open .mhub-item:nth-child(2) .mhub-label { transition-delay: 0.11s; }
+        .mhub-container.open .mhub-item:nth-child(3) .mhub-label { transition-delay: 0.16s; }
+        /* Per-button color themes + idle ambient pulse when open */
+        .mhub-btn-weight { color: #ffd700; border-color: rgba(255,215,0,0.26); }
+        .mhub-btn-weight:hover { border-color: rgba(255,215,0,0.85); box-shadow: 0 0 26px rgba(255,215,0,0.55); background: rgba(255,215,0,0.09); transform: scale(1.14) !important; }
+        .mhub-label-weight { color: rgba(255,215,0,0.9); border-color: rgba(255,215,0,0.13); }
+        .mhub-container.open .mhub-btn-weight { animation: mhub-idle-gold 2.6s ease-in-out infinite 0.2s; }
+        @keyframes mhub-idle-gold {
+            0%, 100% { box-shadow: 0 2px 14px rgba(0,0,0,0.6); }
+            50%       { box-shadow: 0 0 18px rgba(255,215,0,0.38), 0 2px 14px rgba(0,0,0,0.4); }
+        }
+
+        .mhub-btn-guide { color: #39ff14; border-color: rgba(57,255,20,0.26); }
+        .mhub-btn-guide:hover { border-color: rgba(57,255,20,0.85); box-shadow: 0 0 26px rgba(57,255,20,0.55); background: rgba(57,255,20,0.09); transform: scale(1.14) !important; }
+        .mhub-label-guide { color: rgba(57,255,20,0.9); border-color: rgba(57,255,20,0.13); }
+        .mhub-container.open .mhub-btn-guide { animation: mhub-idle-green 2.6s ease-in-out infinite 0.7s; }
+        @keyframes mhub-idle-green {
+            0%, 100% { box-shadow: 0 2px 14px rgba(0,0,0,0.6); }
+            50%       { box-shadow: 0 0 18px rgba(57,255,20,0.36), 0 2px 14px rgba(0,0,0,0.4); }
+        }
+
+        .mhub-btn-keys { color: #00f5ff; border-color: rgba(0,245,255,0.26); }
+        .mhub-btn-keys:hover { border-color: rgba(0,245,255,0.85); box-shadow: 0 0 26px rgba(0,245,255,0.55); background: rgba(0,245,255,0.09); transform: scale(1.14) !important; }
+        .mhub-label-keys { color: rgba(0,245,255,0.9); border-color: rgba(0,245,255,0.13); }
+        .mhub-container.open .mhub-btn-keys { animation: mhub-idle-cyan 2.6s ease-in-out infinite 1.2s; }
+        @keyframes mhub-idle-cyan {
+            0%, 100% { box-shadow: 0 2px 14px rgba(0,0,0,0.6); }
+            50%       { box-shadow: 0 0 18px rgba(0,245,255,0.36), 0 2px 14px rgba(0,0,0,0.4); }
+        }
+
+        /* Cancel idle pulses on hover so they don't fight each other */
+        .mhub-btn-weight:hover,
+        .mhub-btn-guide:hover,
+        .mhub-btn-keys:hover { animation: none !important; }
+        /* ── MOBILE: move hub to bottom-right, items fan upward ── */
+        @media (max-width: 768px) {
+            .mhub-container {
+                right: 16px;
+                bottom: 24px;
+                top: auto;
+            }
+            .mhub-items {
+                position: absolute;
+                bottom: calc(100% + 8px);
+                right: 0;
+                padding-top: 0;
+                flex-direction: column-reverse;
+            }
+            .mhub-trigger {
+                width: 56px; height: 56px;
+                box-shadow: 0 0 24px rgba(0,245,255,0.28), 0 6px 30px rgba(0,0,0,0.85);
+            }
+            .mhub-btn {
+                width: 50px; height: 50px;
+                font-size: 1.05rem;
+            }
+            .mhub-label {
+                font-size: 0.64rem;
+                padding: 5px 13px;
+            }
+        }
+        @media (max-width: 480px) {
+            .mhub-container { right: 12px; bottom: 16px; }
+        }
         /* ── FIVE2FIVE MODAL ── */
         .f2f-modal-backdrop {
             position: fixed; inset: 0; z-index: 9000;
@@ -965,11 +1214,36 @@
         </div>
     </div>
 
-    <!-- ACTION BUTTONS — vertical column, fixed near monthly progress rail -->
-    <div style="position:fixed;right:90px;top:160px;display:flex;flex-direction:column;gap:8px;z-index:10000;">
-        <button id="weightMatrixBtn" class="shortcut-help-btn weight-matrix-btn" title="Mission Weight Matrix" aria-label="Open Mission Weight Matrix"><i class="fas fa-scale-balanced"></i></button>
-        <button id="userGuideBtn" class="shortcut-help-btn user-guide-btn" title="Productivity User Guide · Press U" aria-label="Open User Guide"><i class="fas fa-compass"></i></button>
-        <button id="shortcutHelpBtn" class="shortcut-help-btn" title="Show keyboard shortcuts" aria-label="Show keyboard shortcuts"><i class="fas fa-keyboard"></i></button>
+    <!-- MISSION HUB FAB — single trigger expands to 3 quick-action buttons -->
+    <div class="mhub-container" id="mhubContainer" role="navigation" aria-label="Quick actions">
+        <button class="mhub-trigger" id="mhubTrigger" aria-label="Open quick actions" aria-expanded="false" aria-haspopup="true">
+            <span class="mhub-dots" aria-hidden="true">
+                <span class="mhub-dot mhub-dot-1"></span>
+                <span class="mhub-dot mhub-dot-2"></span>
+                <span class="mhub-dot mhub-dot-3"></span>
+            </span>
+            <i class="fas fa-xmark mhub-icon-close" aria-hidden="true"></i>
+        </button>
+        <div class="mhub-items" id="mhubItems" role="group" aria-label="Quick action buttons">
+            <div class="mhub-item">
+                <span class="mhub-label mhub-label-weight">Mission</span>
+                <button id="weightMatrixBtn" class="mhub-btn mhub-btn-weight" title="Mission Weight Matrix" aria-label="Open Mission Weight Matrix">
+                    <i class="fas fa-scale-balanced" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="mhub-item">
+                <span class="mhub-label mhub-label-guide">User Guide</span>
+                <button id="userGuideBtn" class="mhub-btn mhub-btn-guide" title="Productivity User Guide · Press U" aria-label="Open User Guide">
+                    <i class="fas fa-compass" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="mhub-item">
+                <span class="mhub-label mhub-label-keys">Shortcuts</span>
+                <button id="shortcutHelpBtn" class="mhub-btn mhub-btn-keys" title="Show keyboard shortcuts · Press K" aria-label="Show keyboard shortcuts">
+                    <i class="fas fa-keyboard" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- MONTHLY PROGRESS RAIL -->
@@ -1267,6 +1541,40 @@
 
             updateDeepWork();
             setInterval(updateDeepWork, 60000); // refresh every minute
+        })();
+
+        // ── MISSION HUB FAB ──
+        (function () {
+            const container = document.getElementById('mhubContainer');
+            const trigger   = document.getElementById('mhubTrigger');
+            if (!container || !trigger) return;
+
+            function open()  {
+                container.classList.add('open');
+                trigger.classList.add('active');
+                trigger.setAttribute('aria-expanded', 'true');
+            }
+            function close() {
+                container.classList.remove('open');
+                trigger.classList.remove('active');
+                trigger.setAttribute('aria-expanded', 'false');
+            }
+            function toggle() { container.classList.contains('open') ? close() : open(); }
+
+            trigger.addEventListener('click', function (e) { e.stopPropagation(); toggle(); });
+
+            // Close when clicking a sub-button (after a tiny delay so the modal can open first)
+            document.querySelectorAll('.mhub-btn').forEach(function (btn) {
+                btn.addEventListener('click', function () { setTimeout(close, 80); });
+            });
+
+            // Close on outside click or Escape
+            document.addEventListener('click', function (e) {
+                if (!container.contains(e.target)) close();
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && container.classList.contains('open')) close();
+            });
         })();
     </script>
 </body>
