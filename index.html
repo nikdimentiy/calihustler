@@ -362,6 +362,10 @@
             #dtWidget { display: none !important; }
             /* show the mobile row that contains dtWidget + session FAB */
             .mobile-dt-row { display: flex !important; }
+            /* hide desktop session widget on mobile — FAB handles it */
+            #sessionWidget { display: none !important; }
+            /* extra breathing room around the session FAB button */
+            .sfab-wrap { padding: 12px 0; }
         }
         .mobile-dt-row {
             display: none; /* hidden on desktop, shown on mobile via media query above */
