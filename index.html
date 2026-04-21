@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="description" content="California Hustler — daily mission tracker">
+    <meta property="og:title" content="California Hustler">
+    <meta property="og:description" content="Daily mission tracker by Nikey Studio">
+    <meta property="og:type" content="website">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <title>California Hustler</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"
+          integrity="sha384-/o6I2CkkWC//PSjvWC/eYN7l3xM3tJm8ZzVkCOfp//W05QcE3mlGskpoHB6XqI+B" crossorigin="anonymous">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@600;700&family=Orbitron:wght@700;900&display=swap"
+        rel="stylesheet" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.min.css">
+    <style>
+        /* ── FIVE2FIVE BADGE ── */
+        .f2f-badge {
+            display: flex; align-items: center; gap: 10px;
+            text-decoration: none; cursor: pointer;
+            padding: 8px 16px 8px 8px;
+            border-radius: 50px;
+            border: 1px solid rgba(0,245,255,0.2);
+            background: rgba(0,245,255,0.04);
+            backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+            position: relative; overflow: hidden;
+        }
+        .f2f-badge::before {
+            content: ''; position: absolute;
+            top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0,245,255,0.5), transparent);
+        }
+        .f2f-badge:hover {
+            border-color: rgba(0,245,255,0.5);
+            background: rgba(0,245,255,0.08);
+            box-shadow: 0 0 24px rgba(0,245,255,0.2), inset 0 0 20px rgba(0,245,255,0.04);
+            transform: translateY(-2px);
+        }
+        .f2f-badge img { width: 58px; height: 58px; border-radius: 50%; border: 1px solid rgba(0,245,255,0.35); box-shadow: 0 0 14px rgba(0,245,255,0.3); transition: box-shadow 0.3s, transform 0.3s; flex-shrink: 0; }
+        .f2f-badge:hover img { box-shadow: 0 0 28px rgba(0,245,255,0.6); transform: scale(1.06); }
+        .f2f-badge-text { display: flex; flex-direction: column; gap: 2px; align-items: center; text-align: center; }
+        .f2f-badge-title { font-family: var(--font-title, 'Rajdhani', sans-serif); font-size: 0.75rem; font-weight: 700; color: #00f5ff; letter-spacing: 2px; text-shadow: 0 0 12px rgba(0,245,255,0.5); line-height: 1; }
+        .f2f-badge-sub { font-family: var(--font-mono, 'Share Tech Mono', monospace); font-size: 0.52rem; color: rgba(200,230,240,0.45); letter-spacing: 1.5px; text-transform: uppercase; line-height: 1; }
+        /* ── DEEP WORK CLUSTER PANEL ── */
+        .dw-cluster {
+            display: flex; align-items: center; justify-content: center; gap: 28px;
+            margin: 24px 0 20px;
+            padding: 32px 44px 26px;
+            position: relative;
+            background: linear-gradient(150deg, rgba(191,95,255,0.07) 0%, rgba(4,8,20,0.72) 50%, rgba(255,215,0,0.07) 100%);
+            border-top: 1px solid rgba(191,95,255,0.38);
+            border-bottom: 1px solid rgba(255,215,0,0.24);
+            border-left: 1px solid rgba(255,255,255,0.05);
+            border-right: 1px solid rgba(255,255,255,0.05);
+            border-radius: 8px;
+            backdrop-filter: blur(22px);
+            box-shadow:
+                0 -2px 40px rgba(191,95,255,0.15),
+                0 6px 36px rgba(255,215,0,0.10),
+                0 22px 56px rgba(0,0,0,0.6),
+                inset 0 1px 0 rgba(255,255,255,0.05),
+                inset 0 -1px 0 rgba(255,215,0,0.07);
+        }
+        /* floating section label */
+        .dw-cluster::before {
+            content: '◈  DEEP WORK FOCUS  ◈';
+            position: absolute;
+            top: -10px; left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.55rem; letter-spacing: 0.28em;
+            color: rgba(191,95,255,0.85);
+            background: #040912;
+            padding: 2px 18px;
+            white-space: nowrap;
+            text-shadow: 0 0 14px rgba(191,95,255,0.65);
+        }
+        /* inner ambient gradient overlay */
+        .dw-cluster::after {
+            content: '';
+            position: absolute; inset: 0;
+            border-radius: 8px;
+            background: linear-gradient(90deg, rgba(191,95,255,0.07) 0%, transparent 35%, transparent 65%, rgba(255,215,0,0.07) 100%);
+            pointer-events: none;
+        }
+        /* top-left corner accent */
+        .dw-cluster .dw-corner-tl,
+        .dw-cluster .dw-corner-tr,
+        .dw-cluster .dw-corner-bl,
+        .dw-cluster .dw-corner-br {
+            position: absolute; width: 14px; height: 14px; pointer-events: none;
+        }
+        .dw-cluster .dw-corner-tl { top: -1px; left: -1px;  border-top: 2px solid rgba(191,95,255,0.7); border-left:  2px solid rgba(191,95,255,0.7); border-radius: 8px 0 0 0; }
+        .dw-cluster .dw-corner-tr { top: -1px; right: -1px; border-top: 2px solid rgba(191,95,255,0.7); border-right: 2px solid rgba(191,95,255,0.7); border-radius: 0 8px 0 0; }
+        .dw-cluster .dw-corner-bl { bottom: -1px; left: -1px;  border-bottom: 2px solid rgba(255,215,0,0.6); border-left:  2px solid rgba(255,215,0,0.6); border-radius: 0 0 0 8px; }
+        .dw-cluster .dw-corner-br { bottom: -1px; right: -1px; border-bottom: 2px solid rgba(255,215,0,0.6); border-right: 2px solid rgba(255,215,0,0.6); border-radius: 0 0 8px 0; }
+
+        .dw-gauge { position: relative; display: flex; flex-direction: column; align-items: center; width: 90px; user-select: none; }
+        .dw-arc-wrap { position: relative; width: 80px; height: 80px; }
+        .dw-arc { width: 80px; height: 80px; overflow: visible; }
+        .dw-spin-ring { transform-origin: 40px 40px; animation: dw-spin 14s linear infinite; }
+        @keyframes dw-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .dw-arc-track { fill: none; stroke-width: 5.5; }
+        .dw-arc-fill { fill: none; stroke-width: 5.5; stroke-linecap: round; stroke-dasharray: 175.93; stroke-dashoffset: 175.93; transform: rotate(-90deg); transform-origin: 40px 40px; transition: stroke-dashoffset 1.4s cubic-bezier(0.4,0,0.2,1); }
+        .dw-week .dw-arc-track { stroke: rgba(191,95,255,0.14); }
+        .dw-week .dw-arc-fill  { stroke: #bf5fff; filter: drop-shadow(0 0 7px rgba(191,95,255,1)); }
+        .dw-week .dw-spin-ring circle { stroke: rgba(191,95,255,0.32); }
+        .dw-day  .dw-arc-track { stroke: rgba(255,215,0,0.14); }
+        .dw-day  .dw-arc-fill  { stroke: #ffd700; filter: drop-shadow(0 0 7px rgba(255,215,0,1)); }
+        .dw-day  .dw-spin-ring circle { stroke: rgba(255,215,0,0.32); }
+        .dw-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
+        .dw-value { font-family: 'Rajdhani', sans-serif; font-size: 1.35rem; font-weight: 700; line-height: 1; letter-spacing: 0; }
+        .dw-week .dw-value { color: #bf5fff; text-shadow: 0 0 16px rgba(191,95,255,1); }
+        .dw-day  .dw-value { color: #ffd700;  text-shadow: 0 0 16px rgba(255,215,0,1); }
+        .dw-unit { font-family: 'Rajdhani', sans-serif; font-size: 0.6rem; font-weight: 500; letter-spacing: 1px; color: rgba(200,230,240,0.45); margin-top: 2px; text-transform: lowercase; }
+        .dw-label { font-family: 'Rajdhani', sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 1.5px; margin-top: 6px; line-height: 1; text-transform: uppercase; }
+        .dw-week .dw-label { color: #bf5fff; text-shadow: 0 0 10px rgba(191,95,255,0.6); }
+        .dw-day  .dw-label { color: #ffd700;  text-shadow: 0 0 10px rgba(255,215,0,0.6); }
+        .dw-sublabel { font-family: 'Rajdhani', sans-serif; font-size: 0.6rem; font-weight: 400; letter-spacing: 0.5px; color: rgba(200,230,240,0.4); margin-top: 3px; opacity: 0.75; }
+        .dw-arrow { font-family: 'Share Tech Mono', monospace; font-size: 1rem; flex-shrink: 0; opacity: 0.5; letter-spacing: -1px; }
+        .dw-week-arrow { color: #bf5fff; text-shadow: 0 0 8px rgba(191,95,255,0.7); }
+        .dw-day-arrow  { color: #ffd700;  text-shadow: 0 0 8px rgba(255,215,0,0.7); }
+        @media (max-width: 600px) {
+            .dw-cluster { flex-wrap: wrap; justify-content: center; gap: 16px; padding: 26px 20px 22px; }
+            .f2f-badge { padding: 6px 10px 6px 6px; }
+            .f2f-badge img { width: 46px; height: 46px; }
+            .f2f-badge-title { font-size: 0.65rem; }
+            .f2f-badge-sub { display: none; }
+            .dw-cluster .dw-corner-tl, .dw-cluster .dw-corner-tr,
+            .dw-cluster .dw-corner-bl, .dw-cluster .dw-corner-br { width: 10px; height: 10px; }
+        }
+        /* ── FIVE2FIVE MODAL ── */
+        .f2f-modal-backdrop {
+            position: fixed; inset: 0; z-index: 9000;
+            background: rgba(5,8,16,0.45);
+            backdrop-filter: blur(18px) saturate(1.4);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+        .f2f-modal-backdrop.open { opacity: 1; pointer-events: all; }
+        .f2f-modal {
+            position: relative;
+            background: rgba(5,12,28,0.55);
+            backdrop-filter: blur(24px) saturate(1.6);
+            border: 1px solid rgba(0,245,255,0.22);
+            border-top: 2px solid rgba(0,245,255,0.7);
+            border-radius: 6px;
+            padding: 28px 28px 24px;
+            max-width: 420px; width: calc(100% - 40px);
+            box-shadow: 0 0 60px rgba(0,245,255,0.1), 0 24px 80px rgba(0,0,0,0.35);
+            transform: translateY(14px) scale(0.97);
+            transition: transform 0.28s cubic-bezier(0.34,1.56,0.64,1), opacity 0.25s ease;
+            opacity: 0;
+        }
+        .f2f-modal-backdrop.open .f2f-modal { transform: translateY(0) scale(1); opacity: 1; }
+        .f2f-modal::before {
+            content: ''; position: absolute; top: 0; left: 10%; right: 10%; height: 1px;
+            background: linear-gradient(90deg, transparent, #00f5ff, transparent);
+        }
+        .f2f-modal-close {
+            position: absolute; top: 12px; right: 14px;
+            background: none; border: none; cursor: pointer;
+            color: rgba(200,230,240,0.4); font-size: 1.2rem; line-height: 1;
+            padding: 4px 6px; border-radius: 4px;
+            transition: color 0.2s, background 0.2s;
+        }
+        .f2f-modal-close:hover { color: #00f5ff; background: rgba(0,245,255,0.08); }
+        .f2f-modal-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+        .f2f-modal-icon {
+            width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid rgba(0,245,255,0.35);
+            box-shadow: 0 0 14px rgba(0,245,255,0.3);
+            background: rgba(0,245,255,0.07);
+            color: #00f5ff; font-size: 1.1rem;
+        }
+        .f2f-modal-title {
+            font-family: 'Rajdhani', sans-serif; font-size: 1.15rem; font-weight: 700;
+            color: #00f5ff; letter-spacing: 0.5px; line-height: 1.1;
+        }
+        .f2f-modal-title small {
+            display: block; font-size: 0.72rem; font-weight: 400;
+            color: rgba(200,230,240,0.4); letter-spacing: 0; margin-top: 2px;
+        }
+        .f2f-rules { display: flex; flex-direction: column; gap: 10px; }
+        .f2f-rule {
+            display: flex; align-items: flex-start; gap: 12px;
+            background: rgba(0,245,255,0.03);
+            border: 1px solid rgba(0,245,255,0.08);
+            border-radius: 6px; padding: 11px 14px;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .f2f-rule:hover { background: rgba(0,245,255,0.06); border-color: rgba(0,245,255,0.18); }
+        .f2f-rule-emoji { font-size: 1.3rem; line-height: 1; flex-shrink: 0; margin-top: 1px; }
+        .f2f-rule-body { flex: 1; }
+        .f2f-rule-name { font-family: 'Rajdhani', sans-serif; font-size: 0.95rem; font-weight: 600; line-height: 1.2; }
+        .f2f-rule-tag  { font-family: 'Rajdhani', sans-serif; font-size: 0.75rem; font-weight: 400; color: rgba(200,230,240,0.4); margin-top: 2px; }
+        .f2f-rule:nth-child(1) .f2f-rule-name { color: #00f5ff; }
+        .f2f-rule:nth-child(2) .f2f-rule-name { color: #bf5fff; }
+        .f2f-rule:nth-child(3) .f2f-rule-name { color: #ff9e4d; }
+        .f2f-rule:nth-child(4) .f2f-rule-name { color: #39ff14; }
+        .f2f-rule:nth-child(5) .f2f-rule-name { color: #ffd700; }
+    </style>
+</head>
+
+<body>
+    <a class="sr-only" href="#main-content">Skip to content</a>
+
+    <!-- CLOUD AUTH WIDGET -->
+    <div class="cloud-auth-widget">
+        <div class="caw-header">
+            <div class="caw-dot"></div>
+            <span class="caw-label">Cloud DB</span>
+            <span id="cloudAuthStatus" class="caw-status">offline</span>
+        </div>
+        <div id="authGuestH">
+            <form id="loginFormH" autocomplete="on" onsubmit="return false;">
+                <input id="authEmailH" class="caw-input" type="email" name="email" placeholder="email" autocomplete="username email">
+                <input id="authPasswordH" class="caw-input" type="password" name="password" placeholder="password" autocomplete="current-password">
+                <button id="btnSignInH" type="submit" class="caw-btn"><i class="fas fa-bolt" style="font-size:0.6rem;margin-right:4px;"></i>access</button>
+            </form>
+        </div>
+        <div id="authUserH">
+            <span id="greetingTextH" class="caw-greeting"></span>
+            <button id="btnSignOutH" class="caw-signout"><i class="fas fa-sign-out-alt" style="margin-right:4px;"></i>sign out</button>
+        </div>
+    </div>
+
+    <!-- DAY COUNTDOWN WIDGET -->
+    <div class="day-countdown-widget" title="Time remaining today">
+        <div class="zcd-header">Day Countdown</div>
+        <div class="zcd-slots">
+            <div class="zcd-unit">
+                <div class="zcd-num" id="zcdH">--</div>
+                <div class="zcd-label">HRS</div>
+            </div>
+            <div class="zcd-sep">:</div>
+            <div class="zcd-unit">
+                <div class="zcd-num" id="zcdM">--</div>
+                <div class="zcd-label">MIN</div>
+            </div>
+            <div class="zcd-sep">:</div>
+            <div class="zcd-unit">
+                <div class="zcd-num" id="zcdS">--</div>
+                <div class="zcd-label">SEC</div>
+            </div>
+        </div>
+        <div class="zcd-bar">
+            <div class="zcd-bar-fill" id="zcdFill" style="width:0%"></div>
+        </div>
+        <div class="zcd-sublabel">Until Midnight</div>
+    </div>
+
+    <!-- SESSION WIDGET (visible when signed in) -->
+    <div id="sessionWidget">
+        <div class="sw-header">
+            <div class="sw-dot"></div>
+            <span class="sw-label">active session</span>
+        </div>
+        <div class="sw-email" id="swEmail">—</div>
+        <div class="sw-actions">
+            <button class="sw-btn sw-btn-signout" id="swBtnSignOut" title="Sign out of current session">
+                <i class="fas fa-power-off"></i>
+                <span>exit</span>
+            </button>
+            <button class="sw-btn sw-btn-export" id="swBtnExport" title="Export all data to JSON file">
+                <i class="fas fa-file-arrow-down"></i>
+                <span>export</span>
+            </button>
+            <button class="sw-btn sw-btn-wipe" id="swBtnWipe" title="Wipe all local data">
+                <i class="fas fa-trash-can"></i>
+                <span>wipe</span>
+            </button>
+        </div>
+        <div class="sw-cloud-row">
+            <button class="sw-btn-cloud-save" id="swBtnCloudSave" title="Sync all data to Supabase cloud">
+                <span class="sw-cloud-inner">
+                    <i class="fas fa-cloud-arrow-up sw-cloud-ico"></i>
+                    <span class="sw-cloud-text">sync to cloud</span>
+                </span>
+            </button>
+        </div>
+    </div>
+
+    <div class="cali-container" id="main-content">
+
+        <!-- HEADER -->
+        <div class="top-header" style="display:flex;align-items:center;">
+            <div style="flex:1;"></div>
+            <div class="title-area" style="display:flex;align-items:center;gap:12px;">
+                <div style="text-align: center;">
+                    <h1>CALIFORNIA <span>HUSTLER</span></h1>
+                    <p>Build your future, break bad habits, leave a legacy</p>
+                </div>
+            </div>
+            <div style="flex:1;display:flex;justify-content:flex-end;align-items:center;padding-right:36px;">
+                <div class="dt-widget block-night" id="dtWidget">
+                    <div class="dt-date-row">
+                        <span class="dt-main-date" id="dtMainDate">--/--/----</span>
+                        <span class="dt-day-name" id="dtDayName">---</span>
+                    </div>
+                    <div class="dt-meta-row">
+                        <span class="dt-badge" id="dtDayOfYear">DAY --</span>
+                        <span class="dt-badge dt-week-badge" id="dtQuarter">W--</span>
+                    </div>
+                    <div class="dt-block-row">
+                        <span class="dt-block-dot" id="dtDot"></span>
+                        <span class="dt-block-label" id="dtBlockLabel">---</span>
+                        <span class="dt-time" id="dtTime">--:-- --</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" id="weight">
+        <input type="hidden" id="wakeTime">
+
+        <!-- PERFORMANCE METRICS -->
+        <div class="metrics-panel">
+            <button class="metrics-guide-btn" id="metricsGuideBtn" title="Metrics guide"><i class="fas fa-circle-info"></i></button>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon">🔥</div>
+                    <div class="metric-label">// Current Streak</div>
+                    <div class="metric-value" id="hm-streak">0</div>
+                    <div class="metric-sub">consecutive days (min 3 missions)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">🏆</div>
+                    <div class="metric-label">// Best Streak</div>
+                    <div class="metric-value" id="hm-best">0</div>
+                    <div class="metric-sub">days record</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">📅</div>
+                    <div class="metric-label">// Total Days Logged</div>
+                    <div class="metric-value" id="hm-total">0</div>
+                    <div class="metric-sub">days recorded</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">✅</div>
+                    <div class="metric-label">// Today Completed</div>
+                    <div class="metric-value" id="hm-today">0/10</div>
+                    <div class="metric-sub">missions</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">📊</div>
+                    <div class="metric-label">// 7-Day Avg</div>
+                    <div class="metric-value" id="hm-avg7">—</div>
+                    <div class="metric-sub">missions/day</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">🎯</div>
+                    <div class="metric-label">// Perfect Days</div>
+                    <div class="metric-value" id="hm-perfect">0</div>
+                    <div class="metric-sub">10/10 days all-time</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">⚡</div>
+                    <div class="metric-label">// This Week</div>
+                    <div class="metric-value" id="hm-week">0</div>
+                    <div class="metric-sub">missions so far</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">💎</div>
+                    <div class="metric-label">// Hustle Score</div>
+                    <div class="metric-value" id="hm-score">0</div>
+                    <div class="metric-sub">lifetime points</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">😴</div>
+                    <div class="metric-label">// Weakest Day</div>
+                    <div class="metric-value" id="hm-weakday">—</div>
+                    <div class="metric-sub" id="hm-weakday-avg">lowest avg</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">🎖️</div>
+                    <div class="metric-label">// Top Mission</div>
+                    <div class="metric-value" id="hm-topmission">—</div>
+                    <div class="metric-sub" id="hm-topmission-count">all-time completions</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">⏱️</div>
+                    <div class="metric-label">// Since Perfect Day</div>
+                    <div class="metric-value" id="hm-sinceperfect">—</div>
+                    <div class="metric-sub" id="hm-sinceperfect-sub">days ago</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">📈</div>
+                    <div class="metric-label">// Month vs Last</div>
+                    <div class="metric-value" id="hm-monthvs">—</div>
+                    <div class="metric-sub" id="hm-monthvs-sub">missions this month</div>
+                </div>
+            </div>
+            <div class="heatmap-wrap">
+                <div class="heatmap-title"><i class="fas fa-grip-dots"></i> &nbsp;30-DAY ACTIVITY MATRIX</div>
+                <div class="heatmap" id="h-heatmap"></div>
+                <div class="heatmap-legend"></div>
+            </div>
+        </div>
+
+        <!-- DEEP WORK CLUSTER -->
+        <div class="dw-cluster">
+            <span class="dw-corner-tl"></span>
+            <span class="dw-corner-tr"></span>
+            <span class="dw-corner-bl"></span>
+            <span class="dw-corner-br"></span>
+
+            <!-- WEEK DEEP WORK GAUGE -->
+            <div class="dw-gauge dw-week" title="Deep work hours remaining this week (Mon–Fri · 09:00–15:00, excl. lunch)">
+                <div class="dw-arc-wrap">
+                    <svg class="dw-arc" viewBox="0 0 80 80">
+                        <g class="dw-spin-ring">
+                            <circle cx="40" cy="40" r="37" fill="none" stroke-width="0.6" stroke-dasharray="2 5.5"></circle>
+                        </g>
+                        <circle class="dw-arc-track" cx="40" cy="40" r="28"></circle>
+                        <circle class="dw-arc-fill" id="dwWeekArc" cx="40" cy="40" r="28" style="stroke-dashoffset: 41.0501;"></circle>
+                    </svg>
+                    <div class="dw-center">
+                        <div class="dw-value" id="dwWeekVal">30.7</div>
+                        <div class="dw-unit">hrs left</div>
+                    </div>
+                </div>
+                <div class="dw-label">This week</div>
+                <div class="dw-sublabel" id="dwWeekSub">of 25h</div>
+            </div>
+
+            <span class="dw-arrow dw-week-arrow">←</span>
+
+            <!-- FIVE2FIVE BADGE -->
+            <a href="#" class="f2f-badge" title="Five2five · 5 days × 5 hours focus">
+                <img src="f2f-logo.svg" alt="Five2five" width="58" height="58" loading="lazy">
+                <div class="f2f-badge-text">
+                    <span class="f2f-badge-title">FIVE2FIVE</span>
+                    <span class="f2f-badge-sub">5 days · 5h focus · 110%</span>
+                </div>
+            </a>
+
+            <span class="dw-arrow dw-day-arrow">→</span>
+
+            <!-- DAY DEEP WORK GAUGE -->
+            <div class="dw-gauge dw-day" title="Deep work hours remaining today (Mon–Fri · 09:00–15:00, excl. lunch 12–13)">
+                <div class="dw-arc-wrap">
+                    <svg class="dw-arc" viewBox="0 0 80 80">
+                        <g class="dw-spin-ring" style="animation-direction:reverse;animation-duration:10s;">
+                            <circle cx="40" cy="40" r="37" fill="none" stroke-width="0.6" stroke-dasharray="2 5.5"></circle>
+                        </g>
+                        <circle class="dw-arc-track" cx="40" cy="40" r="28"></circle>
+                        <circle class="dw-arc-fill" id="dwDayArc" cx="40" cy="40" r="28" style="stroke-dashoffset: 29.3215;"></circle>
+                    </svg>
+                    <div class="dw-center">
+                        <div class="dw-value" id="dwDayVal">6.7</div>
+                        <div class="dw-unit">hrs left</div>
+                    </div>
+                </div>
+                <div class="dw-label">Today</div>
+                <div class="dw-sublabel" id="dwDaySub">of 5h</div>
+            </div>
+
+        </div>
+
+        <!-- MISSIONS -->
+        <h2 class="section-label"><i class="fas fa-crosshairs" aria-hidden="true"></i> &nbsp;ACTIVE MISSIONS</h2>
+
+        <!-- Energy + completion bar -->
+        <div class="energy-section">
+            <div class="energy-label-head"><i class="fas fa-bolt"></i> &nbsp;Energy Level:</div>
+            <div class="energy-btns">
+                <button class="energy-btn-m" id="h-energy-low">↓ LOW</button>
+                <button class="energy-btn-m" id="h-energy-medium">◆ MED</button>
+                <button class="energy-btn-m" id="h-energy-high">↑ HIGH</button>
+            </div>
+        </div>
+        <div class="completion-bar-wrap">
+            <div class="completion-bar-fill" id="h-comp-bar" style="width:0%"></div>
+        </div>
+        <div class="completion-label" id="h-comp-label">0 of 10 missions completed</div>
+
+        <div class="mission-grid" id="missionGrid"></div>
+
+        <!-- ACTIONS -->
+        <div id="statusMsg" class="status-message"><i class="fas fa-terminal"></i> &nbsp;system online · ready for
+            hustle</div>
+
+        <!-- CALENDAR -->
+        <div class="calendar-section">
+            <div class="cal-header">
+                <div class="cal-title"><i class="fas fa-calendar-week"></i> &nbsp;MISSION TIMELINE</div>
+                <div class="cal-nav">
+                    <button class="cal-nav-btn" id="calPrev"><i class="fas fa-chevron-left"></i></button>
+                    <div class="month-indicator" id="monthIndicator">--</div>
+                    <button class="cal-nav-btn" id="calNext"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+            <div class="cal-daynames">
+                <div class="cal-dayname">SUN</div>
+                <div class="cal-dayname">MON</div>
+                <div class="cal-dayname">TUE</div>
+                <div class="cal-dayname">WED</div>
+                <div class="cal-dayname">THU</div>
+                <div class="cal-dayname">FRI</div>
+                <div class="cal-dayname">SAT</div>
+            </div>
+            <div class="brick-wall" id="brickWall"></div>
+            <div
+                style="font-family: var(--font-mono); font-size:0.6rem; text-align:center; margin-top:18px; color:var(--text-dim); letter-spacing:2px;">
+                ◈ EACH BRICK = ONE DAY &nbsp;|&nbsp; <span style="color:var(--neon-gold);">◈ GLOWING BRICK =
+                    TODAY</span> &nbsp;|&nbsp; CLICK ANY DAY FOR STATS
+            </div>
+        </div>
+    </div>
+
+    <!-- WEIGHT MATRIX MODAL -->
+    <div class="modal-overlay" id="weightMatrixModal">
+        <div class="modal-box" id="weightMatrixModalBox"
+            style="--modal-accent: var(--neon-gold); --modal-glow: rgba(255,215,0,0.5);">
+            <button class="modal-close" id="weightMatrixModalClose" aria-label="Close Mission Weight Matrix"><i class="fas fa-times"></i></button>
+            <div class="modal-header">
+                <div class="modal-icon" style="color:var(--neon-gold); filter:drop-shadow(0 0 10px rgba(255,215,0,0.6));"><i class="fas fa-scale-balanced"></i></div>
+                <div>
+                    <div class="modal-title">MISSION WEIGHT MATRIX</div>
+                    <div class="modal-subtitle" id="wmSubtitle">Smart scoring · Max -- pts/day</div>
+                </div>
+            </div>
+            <div class="modal-body" id="wmModalBody"></div>
+        </div>
+    </div>
+
+    <!-- MISSION MODAL -->
+    <div class="modal-overlay" id="missionModal">
+        <div class="modal-box" id="missionModalBox">
+            <button class="modal-close" id="missionModalClose" aria-label="Close mission details"><i class="fas fa-times"></i></button>
+            <div class="modal-header">
+                <div class="modal-icon" id="mModalIcon"></div>
+                <div>
+                    <div class="modal-title" id="mModalTitle">--</div>
+                    <div class="modal-subtitle" id="mModalSubtitle">--</div>
+                </div>
+            </div>
+            <div class="modal-body" id="mModalBody"></div>
+        </div>
+    </div>
+
+    <!-- DAY MODAL -->
+    <div class="modal-overlay" id="dayModal">
+        <div class="modal-box" id="dayModalBox"
+            style="--modal-accent: var(--neon-gold); --modal-glow: rgba(255,215,0,0.5);">
+            <button class="modal-close" id="dayModalClose" aria-label="Close day details"><i class="fas fa-times"></i></button>
+            <div class="modal-header">
+                <div class="modal-icon"
+                    style="color:var(--neon-gold); filter: drop-shadow(0 0 8px rgba(255,215,0,0.5));"><i
+                        class="fas fa-calendar-day"></i></div>
+                <div>
+                    <div class="modal-title" id="dModalTitle">DAY STATS</div>
+                    <div class="modal-subtitle" id="dModalSubtitle">--</div>
+                </div>
+            </div>
+            <div class="modal-body" id="dModalBody"></div>
+        </div>
+    </div>
+
+    <!-- METRICS GUIDE MODAL -->
+    <div class="modal-overlay" id="metricsGuideModal">
+        <div class="modal-box" style="--modal-accent:var(--neon-purple); --modal-glow:rgba(191,95,255,0.4); border-top-color:var(--neon-purple); box-shadow:0 0 60px rgba(191,95,255,0.35), 0 20px 60px rgba(0,0,0,0.8);">
+            <button class="modal-close" id="metricsGuideClose" aria-label="Close Metrics Guide"><i class="fas fa-times"></i></button>
+            <div class="modal-header">
+                <div class="modal-icon" style="color:var(--neon-purple); filter:drop-shadow(0 0 10px rgba(191,95,255,0.6));"><i class="fas fa-chart-line"></i></div>
+                <div>
+                    <div class="modal-title">METRICS GUIDE</div>
+                    <div class="modal-subtitle">How to read every number on your dashboard</div>
+                </div>
+            </div>
+            <div class="modal-body">
+
+                <!-- 🔥 North Star -->
+                <div class="mg-group">
+                    <div class="mg-group-title north">🔥 North Star &mdash; check these first every day</div>
+                    <div class="mg-group-desc">Your primary signals. If these look good, the system is working.</div>
+
+                    <div class="mg-card">
+                        <div class="mg-card-left">
+                            <div class="mg-metric">Hustle Score</div>
+                            <div class="mg-measures">lifetime · cumulative</div>
+                        </div>
+                        <div class="mg-card-right">
+                            <div class="mg-purpose">Your all-time productivity score — every completed mission adds points, bonus points for perfect days. It only ever goes up.</div>
+                            <div class="mg-signal pink">→ This is the single number that proves long-term consistency. Watch it grow week over week.</div>
+                        </div>
+                    </div>
+
+                    <div class="mg-card">
+                        <div class="mg-card-left">
+                            <div class="mg-metric">Current Streak</div>
+                            <div class="mg-measures">daily · min 3 missions to count</div>
+                        </div>
+                        <div class="mg-card-right">
+                            <div class="mg-purpose">Consecutive days where you completed at least 3 missions. Days with fewer than 3 break the chain — partial effort doesn't sustain the streak.</div>
+                            <div class="mg-signal pink">→ Growing = your system is holding. Drops to zero = either a missed day or a day with under 3 missions — get back above the threshold.</div>
+                        </div>
+                    </div>
+
+                    <div class="mg-card">
+                        <div class="mg-card-left">
+                            <div class="mg-metric">Today Completed</div>
+                            <div class="mg-measures">live · resets at midnight</div>
+                        </div>
+                        <div class="mg-card-right">
+                            <div class="mg-purpose">Missions finished today out of the total. Instant snapshot of how your current day is going.</div>
+                            <div class="mg-signal pink">→ Quick gut-check. If it's late in the day and the number is low, you still have time to push.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 📈 Trend -->
+                <div class="mg-group">
+                    <div class="mg-group-title trend">📈 Trend &mdash; direction of movement</div>
+                    <div class="mg-group-desc">Smoothed signals that filter out single-day noise. Use these to spot real momentum shifts.</div>
+
+                    <div class="mg-card">
+                        <div class="mg-card-left">
+                            <div class="mg-metric">7-Day Avg</div>
+                            <div class="mg-measures">rolling · last 7 days</div>
+                        </div>
+                        <div class="mg-card-right">
+                            <div class="mg-purpose">Average missions completed per day over the past week. Smooths out outlier days — one bad day won't tank it, one great day won't inflate it.</div>
+                            <div class="mg-signal green">→ High avg = healthy, sustainable system. Dropping avg = something is slipping before your streak even breaks.</div>
+                        </div>
+                    </div>
+
+                    <div class="mg-card">
+                        <div class="mg-card-left">
+                            <div class="mg-metric">This Week</div>
+                            <div class="mg-measures">current week · Mon–today</div>
+                        </div>
+                        <div class="mg-card-right">
+                            <div class="mg-purpose">Total missions completed since the start of this week. Useful for weekly planning and comparing week-to-week pace.</div>
+                            <div class="mg-signal green">→ Easy to benchmark: if last week was 42, are you on pace to match or beat it by Sunday?</div>
+                        </div>
+                    </div>
+
+                    <div class="mg-card">
+                        <div class="mg-card-left">
+                            <div class="mg-metric">Month vs Last</div>
+                            <div class="mg-measures">month-over-month</div>
+                        </div>
+                        <div class="mg-card-right">
+                            <div class="mg-purpose">Current month's total missions compared to the previous month. Shows whether you're improving or regressing on a longer timeframe.</div>
+                            <div class="mg-signal green">→ + number = growth. − number = a dip worth investigating. Small swings are normal; large dips need a fix.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 📊 Context -->
+                <div class="mg-group">
+                    <div class="mg-group-title ctx">📊 Context &mdash; historical benchmarks</div>
+                    <div class="mg-group-desc">Reference points that give your daily numbers meaning. More data = more accurate picture.</div>
+
+                    <div class="mg-card">
+                        <div class="mg-card-left">
+                            <div class="mg-metric">Best Streak</div>
+                            <div class="mg-measures">all-time · personal record</div>
+                        </div>
+                        <div class="mg-card-right">
+                            <div class="mg-purpose">Your longest consecutive-day run ever. Proves the system is capable of working at its peak — you've done it before.</div>
+                            <div class="mg-signal purple">→ If Current Streak is close to Best Streak, you're operating near your historical ceiling. Push past it.</div>
+                        </div>
+                    </div>
+
+                    <div class="mg-card">
+                        <div class="mg-card-left">
+                            <div class="mg-metric">Total Days Logged</div>
+                            <div class="mg-measures">all-time · cumulative</div>
+                        </div>
+                        <div class="mg-card-right">
+                            <div class="mg-purpose">Total number of days you've recorded activity. The larger this number, the more reliable every other metric on the dashboard becomes.</div>
+                            <div class="mg-signal purple">→ Under 14 days: trends are rough estimates. Over 30: patterns are real. Over 90: your data is trustworthy.</div>
+                        </div>
+                    </div>
+
+                    <div class="mg-card">
+                        <div class="mg-card-left">
+                            <div class="mg-metric">Perfect Days</div>
+                            <div class="mg-measures">all-time · 100% days</div>
+                        </div>
+                        <div class="mg-card-right">
+                            <div class="mg-purpose">Days where you completed every single mission. Each one proves you're fully capable of hitting the ceiling.</div>
+                            <div class="mg-signal purple">→ Even rare perfect days matter — they show the ceiling exists and is reachable. Aim to increase the frequency.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 🔍 Diagnostic -->
+                <div class="mg-group">
+                    <div class="mg-group-title diag">🔍 Diagnostic &mdash; where to optimise</div>
+                    <div class="mg-group-desc">Pinpoints specific weaknesses in your system so you can fix the right thing.</div>
+
+                    <div class="mg-card">
+                        <div class="mg-card-left">
+                            <div class="mg-metric">Weakest Day</div>
+                            <div class="mg-measures">by day of week · avg</div>
+                        </div>
+                        <div class="mg-card-right">
+                            <div class="mg-purpose">The day of the week with the lowest average mission count across all weeks. Reveals a structural gap in your schedule — not bad luck, a pattern.</div>
+                            <div class="mg-signal">→ If it's Monday: your week starts slow — fix the morning routine. If it's Friday: you're losing focus before the weekend.</div>
+                        </div>
+                    </div>
+
+                    <div class="mg-card">
+                        <div class="mg-card-left">
+                            <div class="mg-metric">Top Mission</div>
+                            <div class="mg-measures">all-time · most completions</div>
+                        </div>
+                        <div class="mg-card-right">
+                            <div class="mg-purpose">The mission you've completed most often across all recorded days. This one is already running on autopilot — it's become a real habit.</div>
+                            <div class="mg-signal">→ This is proof habits can be built. Now apply the same consistency to your lowest-completion missions.</div>
+                        </div>
+                    </div>
+
+                    <div class="mg-card">
+                        <div class="mg-card-left">
+                            <div class="mg-metric">Since Perfect Day</div>
+                            <div class="mg-measures">days elapsed · last 100%</div>
+                        </div>
+                        <div class="mg-card-right">
+                            <div class="mg-purpose">Days elapsed since your last 100% mission day. Keeps the peak visible so it doesn't fade from memory.</div>
+                            <div class="mg-signal">→ Under 7: you're sharp. 7–14: due for another push. Over 14: the system may be too complex — simplify or recommit.</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- SHORTCUTS MODAL -->
+    <!-- USER GUIDE MODAL -->
+    <div class="modal-overlay" id="userGuideModal">
+        <div class="modal-box" style="--modal-accent:var(--neon-green); --modal-glow:rgba(57,255,20,0.4); border-top-color:var(--neon-green); box-shadow:0 0 60px rgba(57,255,20,0.3), 0 20px 60px rgba(0,0,0,0.8);">
+            <button class="modal-close" id="userGuideClose" aria-label="Close User Guide"><i class="fas fa-times"></i></button>
+            <div class="modal-header">
+                <div class="modal-icon" style="color:var(--neon-green); filter:drop-shadow(0 0 10px rgba(57,255,20,0.6));"><i class="fas fa-compass"></i></div>
+                <div>
+                    <div class="modal-title">PRODUCTIVITY USER GUIDE</div>
+                    <div class="modal-subtitle">Master the system · Dominate every day</div>
+                </div>
+            </div>
+            <div class="modal-body">
+
+                <!-- SECTION 1: Getting Started -->
+                <div class="ug-section">
+                    <div class="ug-section-title"><span>🚀</span> Getting Started</div>
+                    <ul class="ug-step-list">
+                        <li>
+                            <span class="ug-step-num">01</span>
+                            <span class="ug-step-text"><strong>Set your wake time</strong> — use the wake time input at the top to log when you started your day. This anchors your Prime Day Launch mission and calculates your daily time blocks.</span>
+                        </li>
+                        <li>
+                            <span class="ug-step-num">02</span>
+                            <span class="ug-step-text"><strong>Pick your energy level</strong> — select LOW, MEDIUM, or HIGH each morning. Your energy level is stored daily and influences how you interpret your mission completion rate.</span>
+                        </li>
+                        <li>
+                            <span class="ug-step-num">03</span>
+                            <span class="ug-step-text"><strong>Complete your 10 daily missions</strong> — check off each mission as you finish it. Missions are tracked per day. Completing at least <strong>3 missions</strong> keeps your streak alive.</span>
+                        </li>
+                        <li>
+                            <span class="ug-step-num">04</span>
+                            <span class="ug-step-text"><strong>Review your metrics panel</strong> — after completing missions, scroll up to the metrics panel to track your Hustle Score, streak, and weekly averages in real time.</span>
+                        </li>
+                        <li>
+                            <span class="ug-step-num">05</span>
+                            <span class="ug-step-text"><strong>Review past days</strong> — click any date on the calendar to review what missions were completed. Use this to spot patterns in your consistency.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="ug-divider"></div>
+
+                <!-- SECTION 2: Daily Power Routine -->
+                <div class="ug-section">
+                    <div class="ug-section-title"><span>⚡</span> Daily Power Routine</div>
+                    <div class="ug-tip-card gold">
+                        <div class="ug-tip-title">Win the morning, own the day</div>
+                        <div class="ug-tip-body">Complete <strong>Prime Day Launch</strong> (Mission 10) within the first 90 minutes of waking. It sets the tone for every mission that follows. A strong morning creates momentum that compounds through the day.</div>
+                    </div>
+                    <div class="ug-tip-card cyan">
+                        <div class="ug-tip-title">Stack your missions by energy</div>
+                        <div class="ug-tip-body">On <strong>HIGH energy days</strong> — tackle Learn Core, Intellectual Feast, and Conclusion Journal in the morning while your mind is sharpest. Save physical missions for midday. On <strong>LOW energy days</strong> — lead with Energy Recovery and Sculpted Physique to recharge the system.</div>
+                    </div>
+                    <div class="ug-tip-card">
+                        <div class="ug-tip-title">Use the Mission Weight Matrix (press X)</div>
+                        <div class="ug-tip-body">Not all missions are equal. Weight-3 missions (highest impact) should be prioritized when time is short. Open the Weight Matrix to see today's score and which missions give you the most points.</div>
+                    </div>
+                    <div class="ug-tip-card pink">
+                        <div class="ug-tip-title">Log before midnight</div>
+                        <div class="ug-tip-body">The system resets at <strong>midnight</strong>. Always check your missions before bed — even 5 minutes of journaling or a quick finance review counts. Partial wins are better than blank days.</div>
+                    </div>
+                </div>
+
+                <div class="ug-divider"></div>
+
+                <!-- SECTION 3: The 10 Missions -->
+                <div class="ug-section">
+                    <div class="ug-section-title"><span>🎯</span> The 10 Missions — Quick Reference</div>
+                    <div class="ug-mission-grid">
+                        <div class="ug-mission-row">
+                            <span class="ug-mission-num">1</span>
+                            <div>
+                                <div class="ug-mission-name">Time Mastery</div>
+                                <div class="ug-mission-desc">Track every hour. Awareness of where time goes is your first weapon against chaos and distraction.</div>
+                            </div>
+                        </div>
+                        <div class="ug-mission-row">
+                            <span class="ug-mission-num">2</span>
+                            <div>
+                                <div class="ug-mission-name">Intellectual Feast</div>
+                                <div class="ug-mission-desc">30+ minutes of deep reading daily. Compounding knowledge is the highest-ROI investment you can make.</div>
+                            </div>
+                        </div>
+                        <div class="ug-mission-row">
+                            <span class="ug-mission-num">3</span>
+                            <div>
+                                <div class="ug-mission-name">Virtue Cultivator</div>
+                                <div class="ug-mission-desc">Replace one bad habit per week. Stack positive behaviors like armor — identity shifts one rep at a time.</div>
+                            </div>
+                        </div>
+                        <div class="ug-mission-row">
+                            <span class="ug-mission-num">4</span>
+                            <div>
+                                <div class="ug-mission-name">Energy Recovery</div>
+                                <div class="ug-mission-desc">7–9 hours of sleep. Sleep is your biological supercharger — skipping it costs 2× the next day.</div>
+                            </div>
+                        </div>
+                        <div class="ug-mission-row">
+                            <span class="ug-mission-num">5</span>
+                            <div>
+                                <div class="ug-mission-name">Learn Core</div>
+                                <div class="ug-mission-desc">Code every day. Even 20 minutes of deliberate practice compounds into mastery over months.</div>
+                            </div>
+                        </div>
+                        <div class="ug-mission-row">
+                            <span class="ug-mission-num">6</span>
+                            <div>
+                                <div class="ug-mission-name">Global Voice</div>
+                                <div class="ug-mission-desc">Practice English daily. Language fluency is the operating system of global success and opportunity.</div>
+                            </div>
+                        </div>
+                        <div class="ug-mission-row">
+                            <span class="ug-mission-num">7</span>
+                            <div>
+                                <div class="ug-mission-name">Conclusion Journal</div>
+                                <div class="ug-mission-desc">Write it down. Journaling captures insight before it fades — your journal is RAM for your brain.</div>
+                            </div>
+                        </div>
+                        <div class="ug-mission-row">
+                            <span class="ug-mission-num">8</span>
+                            <div>
+                                <div class="ug-mission-name">Sculpted Physique</div>
+                                <div class="ug-mission-desc">Your body is your first business. Daily physical investment pays dividends in every other area.</div>
+                            </div>
+                        </div>
+                        <div class="ug-mission-row">
+                            <span class="ug-mission-num">9</span>
+                            <div>
+                                <div class="ug-mission-name">Financial Fortress</div>
+                                <div class="ug-mission-desc">Review your finances daily. What gets measured gets managed — awareness precedes wealth.</div>
+                            </div>
+                        </div>
+                        <div class="ug-mission-row">
+                            <span class="ug-mission-num">10</span>
+                            <div>
+                                <div class="ug-mission-name">Prime Day Launch</div>
+                                <div class="ug-mission-desc">Win the first 90 minutes. A strong morning routine locks in focus and reduces decision fatigue all day.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ug-divider"></div>
+
+                <!-- SECTION 4: Building Streaks -->
+                <div class="ug-section">
+                    <div class="ug-section-title"><span>🔥</span> Building &amp; Protecting Your Streak</div>
+                    <div class="ug-tip-card">
+                        <div class="ug-tip-title">The 3-mission minimum rule</div>
+                        <div class="ug-tip-body">Your streak only counts on days with <strong>3 or more completed missions</strong>. On busy or low-energy days, identify your 3 highest-weight missions and complete at least those. Protect the chain above all else.</div>
+                    </div>
+                    <div class="ug-tip-card cyan">
+                        <div class="ug-tip-title">Never miss twice</div>
+                        <div class="ug-tip-body">Missing one day breaks the streak but is recoverable. Missing two days in a row starts a downward spiral. The rule: <strong>never miss twice</strong>. One off day is rest. Two is a new bad habit forming.</div>
+                    </div>
+                    <div class="ug-tip-card purple">
+                        <div class="ug-tip-title">Use your Best Streak as a target</div>
+                        <div class="ug-tip-body">When your Current Streak approaches your Best Streak, you're operating at your personal peak. Open the Metrics Guide (press G) to see the full breakdown. Each time you break your record, the ceiling rises.</div>
+                    </div>
+                </div>
+
+                <div class="ug-divider"></div>
+
+                <!-- SECTION 5: Pro Tips -->
+                <div class="ug-section">
+                    <div class="ug-section-title"><span>💡</span> Pro Tips &amp; Power Features</div>
+                    <div class="ug-tip-card gold">
+                        <div class="ug-tip-title">Keyboard shortcuts are your edge</div>
+                        <div class="ug-tip-body">Keys <strong>1–0</strong> toggle missions instantly. <strong>K</strong> shows shortcuts, <strong>G</strong> opens the Metrics Guide, <strong>X</strong> opens Weight Matrix. Use them to log missions in seconds without scrolling.</div>
+                    </div>
+                    <div class="ug-tip-card">
+                        <div class="ug-tip-title">Check your 7-Day Average, not just the streak</div>
+                        <div class="ug-tip-body">The 7-day average catches slow decline before your streak breaks. If the average is dropping, your system is slipping — adjust before it hits zero. A rising average means sustainable momentum.</div>
+                    </div>
+                    <div class="ug-tip-card cyan">
+                        <div class="ug-tip-title">Use the calendar to spot your patterns</div>
+                        <div class="ug-tip-body">Look at the calendar heat map weekly. Which days of the week are consistently weak? Are you strong on Monday but dead by Friday? Adjust your routines to front-load the week's hardest missions.</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="shortcutModal">
+        <div class="modal-box" id="shortcutModalBox" style="--modal-accent: var(--neon-cyan); --modal-glow: rgba(0,245,255,0.4);">
+            <button class="modal-close" id="shortcutModalClose" aria-label="Close keyboard shortcuts"><i class="fas fa-times"></i></button>
+            <div class="modal-header">
+                <div class="modal-icon" style="color:var(--neon-cyan); filter: drop-shadow(0 0 8px rgba(0,245,255,0.5));"><i class="fas fa-keyboard"></i></div>
+                <div>
+                    <div class="modal-title">KEYBOARD SHORTCUTS</div>
+                    <div class="modal-subtitle">Press K or click the icon</div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <ul class="shortcut-list">
+                    <li><span class="shortcut-key">C</span><span class="shortcut-desc">Jump to calendar</span></li>
+                    <li><span class="shortcut-key">K</span><span class="shortcut-desc">Show this shortcut list</span></li>
+                    <li><span class="shortcut-key">P</span><span class="shortcut-desc">Jump to performance metrics</span></li>
+                    <li><span class="shortcut-key">L</span><span class="shortcut-desc">Set energy level to LOW</span></li>
+                    <li><span class="shortcut-key">M</span><span class="shortcut-desc">Set energy level to MEDIUM</span></li>
+                    <li><span class="shortcut-key">H</span><span class="shortcut-desc">Set energy level to HIGH</span></li>
+                    <li><span class="shortcut-key">G</span><span class="shortcut-desc">Open Metrics Guide</span></li>
+                    <li><span class="shortcut-key">U</span><span class="shortcut-desc">Open User Guide</span></li>
+                    <li><span class="shortcut-key">X</span><span class="shortcut-desc">Open Mission Weight Matrix</span></li>
+
+                    <li><span class="shortcut-key">1</span><span class="shortcut-desc">Toggle Time Mastery</span></li>
+                    <li><span class="shortcut-key">2</span><span class="shortcut-desc">Toggle Intellectual Feast</span></li>
+                    <li><span class="shortcut-key">3</span><span class="shortcut-desc">Toggle Virtue Cultivator</span></li>
+                    <li><span class="shortcut-key">4</span><span class="shortcut-desc">Toggle Energy Recovery</span></li>
+                    <li><span class="shortcut-key">5</span><span class="shortcut-desc">Toggle Learn Core</span></li>
+                    <li><span class="shortcut-key">6</span><span class="shortcut-desc">Toggle Global Voice</span></li>
+                    <li><span class="shortcut-key">7</span><span class="shortcut-desc">Toggle Conclusion Journal</span></li>
+                    <li><span class="shortcut-key">8</span><span class="shortcut-desc">Toggle Sculpted Physique</span></li>
+                    <li><span class="shortcut-key">9</span><span class="shortcut-desc">Toggle Financial Fortress</span></li>
+                    <li><span class="shortcut-key">0</span><span class="shortcut-desc">Toggle Prime Day Launch</span></li>
+                    <li><span class="shortcut-key">A</span><span class="shortcut-desc">About author of webpage</span></li>
+                    <li><span class="shortcut-key">ESC</span><span class="shortcut-desc">Close any modal</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ACTION BUTTONS — vertical column, fixed near monthly progress rail -->
+    <div style="position:fixed;right:90px;top:160px;display:flex;flex-direction:column;gap:8px;z-index:10000;">
+        <button id="weightMatrixBtn" class="shortcut-help-btn weight-matrix-btn" title="Mission Weight Matrix" aria-label="Open Mission Weight Matrix"><i class="fas fa-scale-balanced"></i></button>
+        <button id="userGuideBtn" class="shortcut-help-btn user-guide-btn" title="Productivity User Guide · Press U" aria-label="Open User Guide"><i class="fas fa-compass"></i></button>
+        <button id="shortcutHelpBtn" class="shortcut-help-btn" title="Show keyboard shortcuts" aria-label="Show keyboard shortcuts"><i class="fas fa-keyboard"></i></button>
+    </div>
+
+    <!-- MONTHLY PROGRESS RAIL -->
+    <div class="month-rail" id="monthRail">
+        <div class="mr-corner tl"></div>
+        <div class="mr-corner tr"></div>
+        <div class="mr-corner bl"></div>
+        <div class="mr-corner br"></div>
+        <div class="mr-header">
+            <div class="mr-month-label" id="mrMonthLabel">APR</div>
+            <div class="mr-year-label" id="mrYearLabel">2026</div>
+        </div>
+        <div class="mr-progress-wrap">
+            <div class="mr-progress-fill" id="mrProgressFill"></div>
+        </div>
+        <div class="mr-bricks" id="mrBricks"></div>
+        <div class="mr-footer">
+            <div class="mr-pct" id="mrPct">0%</div>
+            <div class="mr-day-counter">
+                DAY <span class="mr-day-cur" id="mrDayCur">0</span><br><span id="mrDayTotal">0</span> DAYS
+            </div>
+        </div>
+    </div>
+
+    <!-- Nikey Studio contact popup -->
+    <div id="nikeyPopupOverlay" style="
+        position: fixed; inset: 0;
+        background: rgba(0,0,0,0.55);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        z-index: 2000;
+        display: flex; align-items: center; justify-content: center;
+        opacity: 0; pointer-events: none;
+        transition: opacity 0.22s ease;
+    " onclick="if(event.target===this) closeNikeyPopup()">
+        <div id="nikeyPopupBox" style="
+            background: rgba(5, 14, 28, 0.78);
+            border: 1px solid rgba(0,245,255,0.22);
+            border-top: 2px solid #00f5ff;
+            border-radius: 6px;
+            padding: 28px 36px 24px;
+            min-width: 280px;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(0,245,255,0.12), 0 16px 48px rgba(0,0,0,0.7);
+            transform: translateY(16px) scale(0.97);
+            transition: transform 0.22s ease, opacity 0.22s ease;
+            opacity: 0;
+            font-family: 'Share Tech Mono', monospace;
+        ">
+            <div style="font-family:'Orbitron',sans-serif; font-size:0.78rem; letter-spacing:0.2em; color:#00f5ff; text-transform:uppercase; margin-bottom:4px;">
+                Nikey Studio
+            </div>
+            <div style="font-size:0.62rem; letter-spacing:0.15em; color:rgba(200,230,240,0.35); text-transform:uppercase; margin-bottom:20px;">
+                2026
+            </div>
+            <div style="
+                background: rgba(0,245,255,0.05);
+                border: 1px solid rgba(0,245,255,0.15);
+                border-radius: 4px;
+                padding: 10px 18px;
+                font-size: 0.8rem;
+                letter-spacing: 0.08em;
+                color: rgba(200,230,240,0.75);
+            ">
+                <span style="color:rgba(0,245,255,0.45); font-size:0.65rem; display:block; margin-bottom:4px; letter-spacing:0.2em; text-transform:uppercase;">contact</span>
+                <span id="nikeyContactEmail"></span>
+            </div>
+            <div id="nikeySignalMsg" style="
+                margin-top: 18px;
+                border-top: 1px solid rgba(0,245,255,0.1);
+                padding-top: 16px;
+                opacity: 0;
+            ">
+                <div style="
+                    font-size: 0.6rem;
+                    letter-spacing: 0.22em;
+                    text-transform: uppercase;
+                    color: rgba(0,245,255,0.4);
+                    margin-bottom: 8px;
+                ">// system message</div>
+                <div id="nikeySignalText" style="
+                    font-size: 0.74rem;
+                    line-height: 1.65;
+                    letter-spacing: 0.04em;
+                    color: rgba(200,230,240,0.6);
+                    font-family: 'Rajdhani', sans-serif;
+                    font-weight: 500;
+                "></div>
+                <div style="
+                    margin-top: 10px;
+                    font-size: 0.65rem;
+                    letter-spacing: 0.18em;
+                    text-transform: uppercase;
+                    color: rgba(255,45,120,0.55);
+                ">&#9679; provide me with a signal</div>
+            </div>
+
+            <button onclick="closeNikeyPopup()" style="
+                margin-top: 18px;
+                background: transparent;
+                border: 1px solid rgba(0,245,255,0.2);
+                border-radius: 3px;
+                color: rgba(200,230,240,0.4);
+                font-family: 'Share Tech Mono', monospace;
+                font-size: 0.65rem;
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+                padding: 5px 16px;
+                cursor: pointer;
+                transition: border-color 0.15s, color 0.15s;
+            " onmouseover="this.style.borderColor='rgba(0,245,255,0.5)';this.style.color='rgba(200,230,240,0.8)'"
+               onmouseout="this.style.borderColor='rgba(0,245,255,0.2)';this.style.color='rgba(200,230,240,0.4)'">
+                close
+            </button>
+        </div>
+    </div>
+
+    <footer style="
+        text-align: center;
+        padding: 18px 0 14px;
+        margin-top: 40px;
+        border-top: 1px solid rgba(0, 245, 255, 0.15);
+        font-family: 'Share Tech Mono', monospace;
+        font-size: 0.72rem;
+        letter-spacing: 0.18em;
+        color: rgba(200, 230, 240, 0.35);
+        text-transform: uppercase;
+        user-select: none;
+    ">
+        <span style="color: rgba(0,245,255,0.25); margin-right: 10px;">&#9632;</span>
+        Only for Private Life
+        <span style="display:inline-block; margin:0 10px; color:rgba(0,245,255,0.2);">&bull;</span>
+        <span id="nikeyStudioLink" onclick="openNikeyPopup()" style="
+            cursor: pointer;
+            color: rgba(200,230,240,0.45);
+            transition: color 0.15s, text-shadow 0.15s;
+        " onmouseover="this.style.color='rgba(0,245,255,0.8)';this.style.textShadow='0 0 8px rgba(0,245,255,0.4)'"
+           onmouseout="this.style.color='rgba(200,230,240,0.45)';this.style.textShadow='none'">
+            Nikey Studio 2026
+        </span>
+        <span style="color: rgba(0,245,255,0.25); margin-left: 10px;">&#9632;</span>
+    </footer>
+
+
+    <!-- FIVE2FIVE CORE RULES MODAL -->
+    <div class="f2f-modal-backdrop" id="f2fModal" role="dialog" aria-modal="true" aria-label="Five2five core rules">
+        <div class="f2f-modal">
+            <button class="f2f-modal-close" id="f2fModalClose" aria-label="Close">&#x2715;</button>
+            <div class="f2f-modal-header">
+                <div class="f2f-modal-icon"><i class="fa-solid fa-star-of-life"></i></div>
+                <div>
+                    <div class="f2f-modal-title">
+                        The 5 Core Rules ✨
+                        <small>Five2five system</small>
+                    </div>
+                </div>
+            </div>
+            <div class="f2f-rules">
+                <div class="f2f-rule">
+                    <div class="f2f-rule-emoji">📅</div>
+                    <div class="f2f-rule-body">
+                        <div class="f2f-rule-name">5 days / week</div>
+                        <div class="f2f-rule-tag">🔄 Rhythm &gt; heroics</div>
+                    </div>
+                </div>
+                <div class="f2f-rule">
+                    <div class="f2f-rule-emoji">⏱️</div>
+                    <div class="f2f-rule-body">
+                        <div class="f2f-rule-name">5+ focus hours</div>
+                        <div class="f2f-rule-tag">⏱️ The daily KPI</div>
+                    </div>
+                </div>
+                <div class="f2f-rule">
+                    <div class="f2f-rule-emoji">🚀</div>
+                    <div class="f2f-rule-body">
+                        <div class="f2f-rule-name">110% stretch</div>
+                        <div class="f2f-rule-tag">🚀 Optional overdelivery</div>
+                    </div>
+                </div>
+                <div class="f2f-rule">
+                    <div class="f2f-rule-emoji">🧠</div>
+                    <div class="f2f-rule-body">
+                        <div class="f2f-rule-name">Prime hours first</div>
+                        <div class="f2f-rule-tag">🧠 Deep work before distractions</div>
+                    </div>
+                </div>
+                <div class="f2f-rule">
+                    <div class="f2f-rule-emoji">📈</div>
+                    <div class="f2f-rule-body">
+                        <div class="f2f-rule-name">Outcomes &gt; hours</div>
+                        <div class="f2f-rule-tag">📈 Results define the day</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CLOUD SYNC STATUS POPUP -->
+    <div id="cloudSyncPopup" class="csync-popup" role="status" aria-live="polite">
+        <div class="csync-icon-wrap">
+            <i id="cloudSyncPopupIcon" class="fas fa-cloud-arrow-up"></i>
+        </div>
+        <div class="csync-content">
+            <div id="cloudSyncPopupTitle" class="csync-title">Sync Complete</div>
+            <div id="cloudSyncPopupMsg" class="csync-msg"></div>
+        </div>
+        <button id="cloudSyncPopupClose" class="csync-close" aria-label="Close"><i class="fas fa-times"></i></button>
+        <div class="csync-progress-bar"><div id="cloudSyncPopupBar" class="csync-progress-fill"></div></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.js"
+            integrity="sha384-a/lNwZPcu6ljtrss4FfZMEv3VEpCASWo3ikRnWnLZWKIO0wgo4sfkNP0aNRzgqAC" crossorigin="anonymous"></script>
+    <script src="app.min.js"></script>
+    <script>
+        (function () {
+            const modal  = document.getElementById('f2fModal');
+            const badge  = document.querySelector('.f2f-badge');
+            const close  = document.getElementById('f2fModalClose');
+            function openF2F(e)  { e.preventDefault(); modal.classList.add('open'); }
+            function closeF2F()  { modal.classList.remove('open'); }
+            if (badge) badge.addEventListener('click', openF2F);
+            if (close) close.addEventListener('click', closeF2F);
+            if (modal) modal.addEventListener('click', e => { if (e.target === modal) closeF2F(); });
+            document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal?.classList.contains('open')) closeF2F(); });
+        })();
+
+        (function () {
+            // Deep Work Focus: Mon–Fri 09:00–15:00 minus lunch 12:00–13:00 = 5h/day, 25h/week
+            const DW_START  = 9;   // 09:00
+            const DW_END    = 15;  // 15:00
+            const LUNCH_S   = 12;  // lunch start
+            const LUNCH_E   = 13;  // lunch end
+            const DW_DAY_H  = (DW_END - DW_START) - (LUNCH_E - LUNCH_S); // 5h
+            const DW_WEEK_H = DW_DAY_H * 5;                               // 25h
+            const ARC_CIRC  = 175.93;                                      // 2π × r28
+
+            function hoursLeftToday(h) {
+                // h = fractional hour right now (e.g. 10.5 = 10:30)
+                if (h < DW_START)  return DW_DAY_H;          // before work starts
+                if (h >= DW_END)   return 0;                  // after work ends
+                if (h >= LUNCH_S && h < LUNCH_E) {
+                    // during lunch: only afternoon block remains
+                    return DW_END - LUNCH_E;                  // 2h
+                }
+                if (h < LUNCH_S) {
+                    // morning block: time to lunch + full afternoon
+                    return (LUNCH_S - h) + (DW_END - LUNCH_E);
+                }
+                // afternoon block (LUNCH_E <= h < DW_END)
+                return DW_END - h;
+            }
+
+            function calcDeepWork() {
+                const now = new Date();
+                const dow = now.getDay(); // 0=Sun, 1=Mon … 6=Sat
+                const h   = now.getHours() + now.getMinutes() / 60 + now.getSeconds() / 3600;
+
+                // ── TODAY ──
+                const dayLeft = (dow === 0 || dow === 6) ? 0 : hoursLeftToday(h);
+
+                // ── THIS WEEK ──
+                let weekLeft = 0;
+                if (dow >= 1 && dow <= 5) {
+                    weekLeft += dayLeft;
+                    for (let d = dow + 1; d <= 5; d++) weekLeft += DW_DAY_H;
+                }
+
+                return { dayLeft, weekLeft };
+            }
+
+            function setArc(arcEl, pct) {
+                // pct: 0 = empty, 1 = full
+                const offset = ARC_CIRC * (1 - Math.max(0, Math.min(1, pct)));
+                arcEl.style.strokeDashoffset = offset.toFixed(4);
+            }
+
+            function updateDeepWork() {
+                const { dayLeft, weekLeft } = calcDeepWork();
+
+                const weekValEl = document.getElementById('dwWeekVal');
+                const weekArcEl = document.getElementById('dwWeekArc');
+                const weekSubEl = document.getElementById('dwWeekSub');
+                const dayValEl  = document.getElementById('dwDayVal');
+                const dayArcEl  = document.getElementById('dwDayArc');
+                const daySubEl  = document.getElementById('dwDaySub');
+
+                if (weekValEl) weekValEl.textContent = weekLeft.toFixed(1);
+                if (weekSubEl) weekSubEl.textContent = 'of ' + DW_WEEK_H + 'h';
+                if (weekArcEl) setArc(weekArcEl, weekLeft / DW_WEEK_H);
+
+                if (dayValEl) dayValEl.textContent = dayLeft.toFixed(1);
+                if (daySubEl) daySubEl.textContent = 'of ' + DW_DAY_H + 'h';
+                if (dayArcEl) setArc(dayArcEl, dayLeft / DW_DAY_H);
+            }
+
+            updateDeepWork();
+            setInterval(updateDeepWork, 60000); // refresh every minute
+        })();
+    </script>
+</body>
+
+</html>
