@@ -359,7 +359,7 @@
         /* ── MOBILE: move hub to bottom-right, items fan upward ── */
         @media (max-width: 768px) {
             .mhub-container {
-                right: 16px;
+                right: 24px;
                 bottom: 24px;
                 top: auto;
             }
@@ -383,8 +383,13 @@
                 padding: 5px 13px;
             }
         }
+        /* mirror countdown's bottom offset at <599px: countdown is left:12px bottom:140px */
+        @media (max-width: 599px) {
+            .mhub-container { right: 12px; bottom: 140px; }
+        }
+        /* mirror countdown's bottom offset at <480px: countdown is centered bottom:12px */
         @media (max-width: 480px) {
-            .mhub-container { right: 12px; bottom: 16px; }
+            .mhub-container { right: 12px; bottom: 12px; }
         }
         /* ── FIVE2FIVE MODAL ── */
         .f2f-modal-backdrop {
