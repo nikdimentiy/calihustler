@@ -487,12 +487,21 @@
         .sfab-divider {
             height: 1px; background: rgba(255,255,255,0.07); margin: 6px 0;
         }
-        /* ── MOBILE: move hub to bottom-right, items fan upward ── */
+        /* ── MOBILE MISSION HUB SLOT — below calendar ── */
+        .mhub-mobile-slot {
+            display: none;
+            justify-content: center;
+            padding: 28px 0 16px;
+        }
+        /* ── MOBILE: move hub to slot below calendar, items fan upward ── */
         @media (max-width: 768px) {
-            .mhub-container {
-                right: 24px;
-                bottom: 24px;
-                top: auto;
+            .mhub-mobile-slot { display: flex; }
+            /* when container is relocated into the slot, remove fixed positioning */
+            .mhub-mobile-slot .mhub-container {
+                position: relative !important;
+                right: auto !important;
+                bottom: auto !important;
+                top: auto !important;
             }
             .mhub-items {
                 position: absolute;
@@ -933,6 +942,9 @@
                     TODAY</span> &nbsp;|&nbsp; CLICK ANY DAY FOR STATS
             </div>
         </div>
+
+        <!-- MOBILE: mission hub trigger placed below calendar for easy reach -->
+        <div id="mhubMobileSlot" class="mhub-mobile-slot"></div>
     </div>
 
     <!-- WEIGHT MATRIX MODAL -->
@@ -1772,6 +1784,28 @@
 
         placeDtWidget();
         window.addEventListener('resize', placeDtWidget);
+
+        /* --- move mhubContainer below calendar on mobile --- */
+        var mhubContainer  = document.getElementById('mhubContainer');
+        var mhubMobileSlot = document.getElementById('mhubMobileSlot');
+        var mhubOrigParent = mhubContainer && mhubContainer.parentElement;
+        var mhubOrigNext   = mhubContainer && mhubContainer.nextSibling;
+
+        function placeMhub() {
+            if (!mhubContainer || !mhubMobileSlot) return;
+            if (isMobile()) {
+                if (!mhubMobileSlot.contains(mhubContainer)) {
+                    mhubMobileSlot.appendChild(mhubContainer);
+                }
+            } else {
+                if (mhubOrigParent && !mhubOrigParent.contains(mhubContainer)) {
+                    mhubOrigParent.insertBefore(mhubContainer, mhubOrigNext || null);
+                }
+            }
+        }
+
+        placeMhub();
+        window.addEventListener('resize', placeMhub);
 
         /* --- session FAB --- */
         var sfabWrap   = document.getElementById('sfabWrap');
