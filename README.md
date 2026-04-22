@@ -20,7 +20,6 @@ A sophisticated web-based daily mission tracker and habit-building application d
 - **Cloud Authentication:** Email/password login with Supabase integration. 🔐☁️
 - **Data Sync:** Automatic backup and sync of missions, logs, and progress to the cloud. 🔄💾
 - **Local Storage:** Offline functionality with local data persistence. 📥🛰️
-- **Export/Import:** JSON export of all data for backup or migration. 📤📥
 
 ### User Experience
 
