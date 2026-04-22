@@ -399,12 +399,16 @@
         /* ── MISSION HUB FAB SPEED DIAL ── */
         .mhub-container {
             position: fixed;
-            right: 90px;
-            top: 160px;
+            left: 16px;
+            top: 16px;
             z-index: 10000;
-            display: flex;
+            display: none;
             flex-direction: column;
-            align-items: flex-end;
+            align-items: flex-start;
+        }
+
+        #mhubContainer.mhub-visible {
+            display: flex;
         }
 
         .mhub-trigger {
@@ -562,7 +566,7 @@
         .mhub-items {
             display: flex;
             flex-direction: column;
-            align-items: flex-end;
+            align-items: flex-start;
             gap: 8px;
             visibility: hidden;
             opacity: 0;
@@ -1033,6 +1037,7 @@
             /* when container is relocated into the slot, remove fixed positioning */
             .mhub-mobile-slot .mhub-container {
                 position: relative !important;
+                left: auto !important;
                 right: auto !important;
                 bottom: auto !important;
                 top: auto !important;
@@ -1067,7 +1072,7 @@
         /* mirror countdown's bottom offset at <599px: countdown is left:12px bottom:140px */
         @media (max-width: 599px) {
             .mhub-container {
-                right: 12px;
+                left: 12px;
                 bottom: 140px;
             }
         }
@@ -1075,7 +1080,7 @@
         /* mirror countdown's bottom offset at <480px: countdown is centered bottom:12px */
         @media (max-width: 480px) {
             .mhub-container {
-                right: 12px;
+                left: 12px;
                 bottom: 12px;
             }
         }
@@ -2552,6 +2557,22 @@
             document.addEventListener('keydown', function (e) {
                 if (e.key === 'Escape' && container.classList.contains('open')) close();
             });
+
+            // Show/hide based on auth state — authUserH.style.display is set to "flex" by
+            // app.min.js when a Supabase session is active, and "none" when signed out.
+            var authUserEl = document.getElementById('authUserH');
+            function syncMhubAuth() {
+                var isAuthed = authUserEl && authUserEl.style.display === 'flex';
+                container.classList.toggle('mhub-visible', !!isAuthed);
+                if (!isAuthed) close();
+            }
+            syncMhubAuth();
+            if (authUserEl) {
+                new MutationObserver(syncMhubAuth).observe(authUserEl, {
+                    attributes: true,
+                    attributeFilter: ['style']
+                });
+            }
         })();
     </script>
 
