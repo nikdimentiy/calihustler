@@ -8,7 +8,11 @@
     <meta property="og:title" content="California Hustler">
     <meta property="og:description" content="Daily mission tracker by Nikey Studio">
     <meta property="og:type" content="website">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/x-icon" href="favicon/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+    <link rel="manifest" href="favicon/site.webmanifest">
     <title>California Hustler</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1005,6 +1009,16 @@
             box-shadow: 0 0 14px rgba(255, 60, 60, 0.2);
         }
 
+        .sfab-btn-wipe-cloud {
+            color: rgba(255, 60, 60, 0.8);
+            border-color: rgba(255, 60, 60, 0.18);
+        }
+
+        .sfab-btn-wipe-cloud:hover {
+            border-color: rgba(255, 60, 60, 0.5);
+            box-shadow: 0 0 14px rgba(255, 60, 60, 0.2);
+        }
+
         .sfab-btn-sync {
             color: rgba(0, 245, 255, 0.9);
             border-color: rgba(0, 245, 255, 0.22);
@@ -1359,7 +1373,11 @@
             </button>
             <button class="sw-btn sw-btn-wipe" id="swBtnWipe" title="Wipe all local data">
                 <i class="fas fa-trash-can"></i>
-                <span>wipe</span>
+                <span>wipe local</span>
+            </button>
+            <button class="sw-btn sw-btn-wipe" id="swBtnWipeCloud" title="Wipe all cloud data">
+                <i class="fas fa-cloud-xmark"></i>
+                <span>wipe cloud</span>
             </button>
         </div>
         <div class="sw-cloud-row">
@@ -1420,6 +1438,9 @@
                         <div class="sfab-divider"></div>
                         <button class="sfab-action-btn sfab-btn-wipe" id="sfabBtnWipe">
                             <i class="fas fa-trash-can"></i><span>wipe local data</span>
+                        </button>
+                        <button class="sfab-action-btn sfab-btn-wipe-cloud" id="sfabBtnWipeCloud">
+                            <i class="fas fa-cloud-xmark"></i><span>wipe cloud data</span>
                         </button>
                         <button class="sfab-action-btn sfab-btn-signout" id="sfabBtnSignOut">
                             <i class="fas fa-power-off"></i><span>sign out</span>
@@ -2636,11 +2657,13 @@
             var sfabBtnSignOut = document.getElementById('sfabBtnSignOut');
             var sfabBtnExport = document.getElementById('sfabBtnExport');
             var sfabBtnWipe = document.getElementById('sfabBtnWipe');
+            var sfabBtnWipeCloud = document.getElementById('sfabBtnWipeCloud');
             var sfabBtnSync = document.getElementById('sfabBtnSync');
 
             var realBtnSignOut = document.getElementById('swBtnSignOut');
             var realBtnExport = document.getElementById('swBtnExport');
             var realBtnWipe = document.getElementById('swBtnWipe');
+            var realBtnWipeCloud = document.getElementById('swBtnWipeCloud');
             var realBtnSync = document.getElementById('swBtnCloudSave');
 
             function mirrorClick(sfabEl, realEl) {
@@ -2653,6 +2676,7 @@
             mirrorClick(sfabBtnSignOut, realBtnSignOut);
             mirrorClick(sfabBtnExport, realBtnExport);
             mirrorClick(sfabBtnWipe, realBtnWipe);
+            mirrorClick(sfabBtnWipeCloud, realBtnWipeCloud);
             mirrorClick(sfabBtnSync, realBtnSync);
 
             function openPanel() {
