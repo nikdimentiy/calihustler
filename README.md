@@ -1,68 +1,105 @@
 # California Hustler
 
-A sophisticated web-based daily mission tracker and habit-building application designed to foster productivity, discipline, and long-term personal growth. Built with a cyberpunk-inspired dark UI featuring neon accents, it combines gamification, data visualization, and cloud synchronization to help users "build their future, break bad habits, and leave a legacy." 🌃✨
+A web-based daily mission tracker and habit-building application built to foster productivity, discipline, and long-term personal growth. Features a cyberpunk-inspired dark UI with neon accents, combining gamification, data visualization, and Supabase cloud sync.
+
+> "Build your future, break bad habits, leave a legacy."
 
 ## Features
 
-### Core Functionality
+### Daily Missions
 
-- **Daily Missions:** Complete 10 weighted missions per day across categories like Productivity, Knowledge, Character, Health, Tech, Language, Mindset, Fitness, Finance, and Routine. ✅📚💪
-- **Progress Tracking:** Real-time completion bar and energy level selection (Low/Medium/High). 📊⚡
-- **Metrics Dashboard:** Comprehensive stats including streaks, averages, perfect days, hustle score, and month-over-month comparisons. 🔁🏆
-- **30-Day Activity Heatmap:** Visual representation of daily activity intensity. 🔥📅
-- **Deep Work Gauges:** Track weekly and daily focused work hours with animated progress indicators. ⏱️🔒
-- **Five2Five Challenge:** Special badge and modal for 5 days × 5 hours focus sessions. 🛡️🎯
-- **Interactive Calendar:** Clickable month view with daily stats modals. 🗓️🔍
-- **Detailed Modals:** Mission stats, day breakdowns, weight matrix, metrics guide, and user onboarding. 🧾🧭
+10 weighted missions spanning key life areas:
 
-### Data & Sync
+| Mission | Category | Weight |
+| --- | --- | --- |
+| Time Mastery | Productivity | 3 |
+| Intellectual Feast | Knowledge | 2 |
+| Virtue Cultivator | Character | 2 |
+| Energy Recovery | Health | 3 |
+| Learn Core | Tech/Learning | 2 |
+| Global Voice | Language | 2 |
+| Conclusion Journal | Mindset | 1 |
+| Sculpted Physique | Fitness | 3 |
+| Financial Fortress | Finance | 2 |
+| Prime Day Launch | Routine | 3 |
 
-- **Cloud Authentication:** Email/password login with Supabase integration. 🔐☁️
-- **Data Sync:** Automatic backup and sync of missions, logs, and progress to the cloud. 🔄💾
-- **Local Storage:** Offline functionality with local data persistence. 📥🛰️
+### Metrics Dashboard
 
-### User Experience
+- Current & best streaks
+- 7-day and monthly averages
+- Weighted hustle score
+- Perfect days count
+- 14-day per-mission completion rates
+- Weekday weakness detection
+- Month-over-month comparisons
 
-- **Responsive Design:** Optimized for desktop and mobile devices. 🖥️📱
-- **Accessibility:** ARIA labels, keyboard navigation, and screen reader support. ♿🧑‍🦯
-- **Immersive UI:** Dark theme with neon colors, animations, and subtle effects. 🌌neon
-- **Gamification:** Streaks, scores, and visual rewards to maintain motivation. 🏅🎉
+### Visualizations
 
-## Installation & Setup
+- **30-Day Activity Heatmap** — daily activity intensity at a glance
+- **Interactive Mission Timeline** — clickable calendar with per-day breakdowns
+- **Month Rail** — fixed right-side monthly progress indicator
+
+### Cloud & Offline
+
+- **Supabase Auth** — email/password authentication
+- **Cloud Sync** — missions and logs synced to `daily_logs` and `missions` tables
+- **Local Storage** — full offline functionality with automatic cache
+
+### UX
+
+- Responsive layout (desktop → mobile, breakpoints at 1100 / 700 / 599 / 480px)
+- Dark cyberpunk theme — neon cyan, pink, gold, green, purple on deep blue (`#050810`)
+- ARIA labels, keyboard navigation, screen reader support
+- PWA-capable (standalone display mode)
+
+## Tech Stack
+
+- **Frontend:** Vanilla JS, HTML5, CSS3 — no framework, no build step
+- **Cloud:** Supabase (PostgreSQL + Auth)
+- **Fonts:** Rajdhani, Orbitron, Share Tech Mono (Google Fonts)
+- **Icons:** Font Awesome 6.5.0
+- **Deploy:** GitHub Pages via Actions
+
+## Getting Started
 
 ### Prerequisites
 
-- A modern web browser (Chrome, Firefox, Safari, Edge) 🌐
-- Internet connection for cloud features (optional for offline use) 📶
+- Any modern browser (Chrome, Firefox, Safari, Edge)
+- Internet connection required only for cloud sync and auth
 
-### Quick Start
+### Run Locally
 
-1. Clone or download the repository:
+```bash
+git clone https://github.com/yourusername/california-hustler.git
+cd california-hustler
+open index.html   # or double-click — no build step needed
+```
 
-   ```bash
-   git clone https://github.com/yourusername/california-hustler.git
-   cd california-hustler
-   ```
-2. Open `index.html` in your web browser. 🖱️
+### Cloud Sync Setup
 
-That's it! The app runs entirely in the browser with no build process required. 🚀
+1. Create a free [Supabase](https://supabase.com) project.
+2. Add your Supabase URL and anon key to the app config in `app.min.js` (or the source before minification).
+3. Create two tables: `daily_logs` and `missions`.
+4. Register via the in-app auth widget (top-left corner).
 
-### Getting Started
+## Daily Workflow
 
-- Open the app and start completing daily missions by clicking on them. 🟢
-- Set your energy level to track focus throughout the day. 🔋
-- View your progress in the metrics dashboard and heatmap. 📈
+1. **Morning** — review yesterday's results, set your energy level (Low / Medium / High).
+2. **Throughout the day** — click missions as you complete them.
+3. **Evening** — check streaks, heatmap, and plan tomorrow.
+4. **Weekly** — aim for the Five2Five challenge (5 days × 5 hours deep work).
 
-### Daily Workflow
+## Keyboard Shortcuts
 
-1. **Morning:** Review yesterday's progress and set energy level. 🌅
-2. **Throughout Day:** Complete missions as you accomplish tasks. ⚒️
-3. **Evening:** Check streaks and plan for tomorrow. 🌙
-4. **Weekly:** Aim for the Five2Five challenge and monitor deep work hours. 📆🔥
+| Action | Shortcut |
+| --- | --- |
+| Toggle mission complete | `Shift + Enter` or right-click |
+| Navigate UI elements | `Tab` |
 
-### Keyboard Shortcuts
+## Deployment
 
-- `Shift + Enter` or right-click on missions to toggle completion. ⌨️
-- Use Tab to navigate through interactive elements. ↹
+The repo deploys automatically to GitHub Pages on every push to `main` via the included Actions workflow (`.github/workflows/static.yml`).
 
-"Build your future, break bad habits, leave a legacy" — California Hustler 🌟🛣️
+## License
+
+GNU General Public License v3 — see [LICENSE](LICENSE).
